@@ -75,10 +75,33 @@ api.websocket = function()
     if data then
         local socketUrl = data.url
         local socket = http.websocket(socketUrl)
+        local motd = socket.receive()
+        if motd then
+            logger.info("Received MOTD: "..motd)
+            local jsondata = textutils.unserialiseJSON(motd)
+            
+        end
         return {
             socket = socket,
             subscribe = function(self, event)
                 self.socket.send(textutils.serialiseJSON({type = "subscribe", event = event, id = 1}))
+                while true do
+                    local response = self.socket.receive()
+                    if response then
+                        local jsondata = textutils.unserialiseJSON(response)
+                        if jsondata then
+                            if jsondata.type == "response" then
+                                if jsondata.ok then
+                                    logger.info("Subscribed to event: "..event)
+                                    return true
+                                else
+                                    logger.warn("Failed to subscribe to event: "..event)
+                                    return false
+                                end
+                            end
+                        end
+                    end
+                end
             end
         }
     else
