@@ -1,0 +1,7 @@
+{
+    "Lua.codeLens.enable": true,
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.workspace.library": [
+        "C:/Users/farka.DESKTOP-8RM09F8/Downloads/twealedcc/cctweaked/library"
+    ]
+}
